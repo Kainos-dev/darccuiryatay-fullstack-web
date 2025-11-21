@@ -1,0 +1,41 @@
+// prisma/schema.prisma
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("MONGODB_URI")
+}
+
+enum Role {
+    admin
+    minorista
+    mayorista
+}
+
+model User {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+
+    firstName   String
+    lastName    String
+    email       String @unique
+    password    String?
+
+    phone       String? // Solo mayorista
+    localidad   String? // Solo mayorista
+    storeName   String? // Solo mayorista
+
+    role        Role @default(minorista)
+
+    emailVerified DateTime?
+
+    verificationToken       String?   @unique
+    verificationTokenExpiry DateTime?
+
+    resetToken       String?   @unique
+    resetTokenExpiry DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
