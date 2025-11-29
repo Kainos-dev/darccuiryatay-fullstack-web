@@ -1,26 +1,28 @@
 import { useSession } from "next-auth/react";       //usamos esto en lugar de "auth" para manejar la session en un clientComponentn
 import Image from "next/image"
+import Link from "next/link"
 // components : 
 import BtnLogin from "./BtnLogin"
-import { Search, UserRound } from "lucide-react";
+import { Search, UserRound, ShoppingCart } from "lucide-react";
 
 
 
-export default function NavBar({ logo }) {
+export default function MainNavBar({ rubro, logo }) {
     const { data: session, status } = useSession();
-    console.log("🚀 ~ NavBar ~ session:", session)
 
     return (
         <div className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-4 z-20">
             <Image
                 src={logo}
-                alt="Yatay Logo"
-                width={100}
-                height={100}
-                className="mb-6 sm:mb-8 border-4"
+                alt={`${rubro} Logo`}
+                width={125}
+                height={125}
+                className="mb-6 ml-8 sm:mb-8 border-4"
             />
+
+
             {/* Barra de búsqueda */}
-            < div className="relative w-full max-w-md" >
+            < div className="relative w-full max-w-md mb-4" >
                 <input
                     type="text"
                     aria-label="Buscar productos"
@@ -37,13 +39,21 @@ export default function NavBar({ logo }) {
                 </span>
             </div >
 
-            {
-                session?.user
-                    ?
-                    <UserRound className="w-10 h-10 text-white mr-8" />
-                    :
-                    <BtnLogin />
-            }
+            <div className="flex items-center gap-8">
+                <Link
+                    href="/cart"
+                >
+                    <ShoppingCart className="w-8 h-8" />
+                </Link>
+
+                {
+                    session?.user
+                        ?
+                        <UserRound className="w-8 h-8 text-white mr-8" />
+                        :
+                        <BtnLogin />
+                }
+            </div>
         </div>
     )
 }

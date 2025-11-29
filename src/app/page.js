@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { barlow } from "@/app/ui/fonts"
 
 export default function HomePage() {
@@ -16,16 +17,21 @@ export default function HomePage() {
             backgroundImage: "url('https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1761868401/Portada_dwqomk.jpg')",
           }}
         />
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-500" />
+        <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-all duration-500" />
 
         {/* Logo/Texto */}
         <div className="relative h-full flex flex-col items-center justify-center p-8 text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wider">
+          {/* <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wider">
             DARCCUIR
-          </h1>
-          <span className={`${barlow.className} text-lg md:text-xl lg:text-2xl font-light opacity-90 group-hover:opacity-100 transition-opacity`}>
-            Ver Catálogo →
-          </span>
+          </h1> */}
+
+          <Image
+            src="https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1763697298/logo-darccuir-blanco_osmcmx.png"
+            alt="Darccuir Logo"
+            width={300}
+            height={100}
+            className="object-contain"
+          />
         </div>
       </Link>
 
@@ -41,16 +47,21 @@ export default function HomePage() {
             backgroundImage: "url('https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1760907717/Portada_jj6hb4.jpg')",
           }}
         />
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-500" />
+        <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-all duration-500" />
 
         {/* Logo/Texto */}
         <div className="relative h-full flex flex-col items-center justify-center p-8 text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wider">
+          {/* <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wider">
             YATAY
-          </h1>
-          <span className={`${barlow.className} text-lg md:text-xl lg:text-2xl font-medium opacity-90 group-hover:opacity-100 transition-opacity`}>
-            Ver Catálogo →
-          </span>
+          </h1> */}
+
+          <Image
+            src="https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1763697294/logo-yatay-blanco_kxvqnz.png"
+            alt="Yatay Logo"
+            width={300}
+            height={100}
+            className="object-contain"
+          />
         </div>
       </Link>
     </section>

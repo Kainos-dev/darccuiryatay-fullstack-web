@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { sendVerificationEmail } from "@/lib/email";
+import crypto from "crypto";
+import { cookies } from "next/headers";
 
 export async function POST(req) {
     try {
@@ -24,7 +27,7 @@ export async function POST(req) {
 
         if (existingUser) {
             return NextResponse.json(
-                { error: "El usuario ya existe" },
+                { success: false, error: "El usuario ya existe" },
                 { status: 400 }
             );
         }
@@ -37,46 +40,74 @@ export async function POST(req) {
             role,
         };
 
-        // MINORISTA → debe tener password
+        // MINORISTA → requiere password
         if (role === "minorista") {
             if (!password) {
                 return NextResponse.json(
-                    { error: "La contraseña es obligatoria para minoristas" },
+                    { success: false, error: "La contraseña es obligatoria" },
                     { status: 400 }
                 );
             }
 
             const hash = await bcrypt.hash(password, 10);
             userData.password = hash;
-
-            // Campos mayorista deben estar en null
             userData.phone = null;
             userData.storeName = null;
             userData.localidad = null;
         }
 
-        // MAYORISTA → NO se registra con password
+        // MAYORISTA → NO usa password
         if (role === "mayorista") {
-            userData.password = ""; // o null, según cómo prefieras manejarlo
+            userData.password = "";
             userData.phone = phone ?? null;
             userData.storeName = storeName ?? null;
             userData.localidad = localidad ?? null;
         }
 
-        // 3. Crear usuario
-        await prisma.user.create({
-            data: userData
+        // 3. GENERAR TOKEN Y EXPIRACIÓN
+        const token = crypto.randomBytes(32).toString("hex");
+        const expiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hora
+
+        userData.verificationToken = token;
+        userData.verificationTokenExpiry = expiry;
+        userData.emailVerified = null;
+
+        // 4. Crear usuario CON carrito vacío en una sola transacción
+        const user = await prisma.user.create({
+            data: {
+                ...userData,
+                cart: {
+                    create: {} // ← Crea carrito vacío automáticamente
+                }
+            },
         });
 
+        // ✨ 5. Mergear carrito anónimo si existe
+        const cookieStore = await cookies();
+        const sessionId = cookieStore.get("darccuiryatay_cart_session_id")?.value;
+        console.log("🚀 ~ POST ~ sessionId:", sessionId)
+
+        if (sessionId) {
+            const { mergeCarts } = await import("@/actions/cart/merge-carts");
+            await mergeCarts(user.id, sessionId);
+        }
+
+        // 6. Enviar el email con el token
+        /* await sendVerificationEmail({
+            email,
+            name: userData.firstName,
+            token
+        }); */
+
         return NextResponse.json(
-            { message: "Usuario registrado correctamente" },
+            { success: true, message: "Usuario registrado. Verifica tu email." },
             { status: 201 }
         );
 
     } catch (error) {
         console.error("Error al registrar usuario:", error);
         return NextResponse.json(
-            { error: "Error al registrar usuario" },
+            { success: false, error: "Error al registrar usuario" },
             { status: 500 }
         );
     }

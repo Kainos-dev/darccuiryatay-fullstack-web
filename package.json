@@ -7,6 +7,7 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "seed:admin": "node prisma/seed-admin.js",
     "lint": "eslint"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^3.0.3",
+    "framer-motion": "^12.23.24",
     "lucide-react": "^0.554.0",
     "mongoose": "^8.19.3",
     "next": "16.0.1",

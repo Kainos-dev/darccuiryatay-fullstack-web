@@ -4,6 +4,8 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { mergeCarts } from "@/actions/cart/merge-carts";
+import { cookies } from "next/headers";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -43,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     name: user.name,
                     email: user.email,
                     emailVerified: user.emailVerified,
-                    role: user.role, 
+                    role: user.role,
                 };
             },
         }),
@@ -55,6 +57,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     callbacks: {
+        //  Mergear carritos al iniciar sesión
+        async signIn({ user }) {
+            try {
+                const cookieStore = await cookies();
+                const sessionId = cookieStore.get("darccuiryatay_cart_session_id")?.value;
+
+                if (sessionId && user.id) {
+                    await mergeCarts(user.id, sessionId);
+                }
+            } catch (error) {
+                console.error("Error al mergear carritos:", error);
+                // No bloqueamos el login si falla el merge
+            }
+
+            return true;
+        },
+
         async jwt({ token, user }) {
             // Primer login
             if (user) {

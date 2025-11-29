@@ -14,28 +14,143 @@ enum Role {
     mayorista
 }
 
+// ******************************** USER ******************************** //
+
 model User {
-    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    firstName   String
-    lastName    String
-    email       String @unique
-    password    String?
+    firstName String
+    lastName  String
+    email     String  @unique
+    password  String?
 
-    phone       String? // Solo mayorista
-    localidad   String? // Solo mayorista
-    storeName   String? // Solo mayorista
+    phone     String? // Solo mayorista
+    localidad String? // Solo mayorista
+    storeName String? // Solo mayorista
 
-    role        Role @default(minorista)
+    role Role @default(minorista)
+
+    cart Cart?
 
     emailVerified DateTime?
 
-    verificationToken       String?   @unique
+    verificationToken       String?
     verificationTokenExpiry DateTime?
 
-    resetToken       String?   @unique
+    resetToken       String?
     resetTokenExpiry DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("users")
 }
+
+model Cart {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    // userId ahora es OPCIONAL (para carritos anónimos)
+    userId String? @unique @db.ObjectId
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    // NUEVO: Para identificar carritos anónimos
+    sessionId String? @unique // ID temporal para invitados
+
+    items CartItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Índice para limpiar carritos viejos
+    @@index([createdAt])
+    @@map("carts")
+}
+
+model CartItem {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    // Relación con Product
+    productId String  @db.ObjectId
+    product   Product @relation(fields: [productId], references: [id])
+
+    quantity Int
+
+    // Relación N:1 con Cart
+    cartId String @db.ObjectId
+    cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+    @@map("cart_items")
+}
+
+/**
+ * ## 🎯 Flujo de Datos
+ * ```
+ * User (id: "user123")
+ * └─ Cart (userId: "user123")
+ * ├─ CartItem (productId: "prod1", quantity: 2)
+ * ├─ CartItem (productId: "prod2", quantity: 1)
+ * └─ CartItem (productId: "prod3", quantity: 5)
+ */
+
+// ******************************** PRODUCTS ******************************** //
+
+enum Rubro {
+    darccuir
+    yatay
+}
+
+model Product {
+    id             String   @id @default(auto()) @map("_id") @db.ObjectId
+    sku            String   @unique
+    name           String
+    price          Float
+    priceWholesale Float?
+    coverImages    String[] // URLs de Cloudinary
+    variants       Json // Array de objetos { color: { name, hex }, images: [] }
+    description    String?
+    guiaTalles     String? // URL de imagen de guía de talles (opcional)
+    rubro          Rubro // "darccuir" o "yatay"
+    subrubros      String[] // Array de IDs de subrubros
+
+    // Campos útiles para administración
+    active    Boolean    @default(true)
+    stock     Int        @default(0)
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    cartItems CartItem[]
+
+    @@map("products")
+}
+
+// Modelo separado para Subrubros (permite jerarquía)
+model Subrubro {
+    id       String     @id @default(auto()) @map("_id") @db.ObjectId
+    name     String     @unique
+    slug     String     @unique
+    parentId String?    @db.ObjectId // Para crear jerarquía
+    parent   Subrubro?  @relation("SubrubroHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    children Subrubro[] @relation("SubrubroHierarchy")
+
+    rubro  Rubro // A qué rubro principal pertenece
+    order  Int     @default(0) // Para ordenar en UI
+    active Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("subrubros")
+}
+
+// Opcional: Modelo para trackear cambios de precio
+/**
+ * model PriceHistory {
+ * id        String   @id @default(auto()) @map("_id") @db.ObjectId
+ * productId String   @db.ObjectId
+ * sku       String
+ * oldPrice  Float
+ * newPrice  Float
+ * changedBy String // Email del admin
+ * changedAt DateTime @default(now())
+ * @@map("price_history")
+ * }
+ */

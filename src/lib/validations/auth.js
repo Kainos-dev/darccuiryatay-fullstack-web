@@ -11,9 +11,6 @@ export const loginSchema = z.object({
         .min(1, "La contraseña es requerida"),
 });
 
-
-
-
 const minoristaSchema = z.object({
     role: z.literal("minorista"),
 

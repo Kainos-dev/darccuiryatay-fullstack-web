@@ -63,88 +63,108 @@ export default function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto mt-50 p-12 space-y-5">
-            <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium">
-                    Email
-                </label>
-                <input
-                    id="email"
-                    type="email"
-                    {...register("email")}
-                    disabled={isLoading}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${errors.email ? "border-red-500" : "border-gray-300"
-                        } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    placeholder="tu@email.com"
-                />
-                {errors.email && (
-                    <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-            </div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+            <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 sm:p-10 space-y-6 border border-gray-200">
 
-            <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium">
-                    Contraseña
-                </label>
-                <div className="relative">
-                    <input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        {...register("password")}
-                        disabled={isLoading}
-                        className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${errors.password ? "border-red-500" : "border-gray-300"
-                            } disabled:opacity-50 disabled:cursor-not-allowed`}
-                        placeholder="••••••••"
-                    />
+                <div className="text-center space-y-2">
+                    <h2 className="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                    <p className="text-gray-500 text-sm">Accede a tu cuenta para continuar</p>
+                </div>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                    {/* Email */}
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="block text-black text-sm font-medium">
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            {...register("email")}
+                            disabled={isLoading}
+                            className={`text-black w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition
+                            ${errors.email ? "border-red-500" : "border-gray-300"}
+                            disabled:opacity-50 disabled:cursor-not-allowed`}
+                            placeholder="tu@email.com"
+                        />
+                        {errors.email && (
+                            <p className="text-xs text-red-500">{errors.email.message}</p>
+                        )}
+                    </div>
+
+                    {/* Password */}
+                    <div className="space-y-2">
+                        <label htmlFor="password" className="block text-black text-sm font-medium">
+                            Contraseña
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                {...register("password")}
+                                disabled={isLoading}
+                                className={`text-black w-full px-4 py-2 pr-12 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition
+                                ${errors.password ? "border-red-500" : "border-gray-300"}
+                                disabled:opacity-50 disabled:cursor-not-allowed`}
+                                placeholder="••••••••"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+                                disabled={isLoading}
+                            >
+                                {showPassword ? "👁️" : "👁️‍🗨️"}
+                            </button>
+                        </div>
+                        {errors.password && (
+                            <p className="text-xs text-red-500">{errors.password.message}</p>
+                        )}
+                    </div>
+
+                    {/* Error general */}
+                    {errors.root && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-sm text-red-600">{errors.root.message}</p>
+                        </div>
+                    )}
+
+                    {/* Submit */}
                     <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        type="submit"
                         disabled={isLoading}
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {showPassword ? "👁️" : "👁️‍🗨️"}
+                        {isLoading ? (
+                            <>
+                                <span className="animate-spin">⏳</span>
+                                Iniciando sesión...
+                            </>
+                        ) : (
+                            "Iniciar Sesión"
+                        )}
                     </button>
+                </form>
+
+                {/* Links */}
+                <div className="text-center space-y-2">
+                    <Link
+                        href="/auth/forgot-password"
+                        className="text-sm text-blue-600 hover:underline"
+                    >
+                        ¿Olvidaste tu contraseña?
+                    </Link>
+                    <br />
+                    <Link
+                        href="/auth/register"
+                        className="text-sm text-gray-700 hover:underline"
+                    >
+                        ¿No tienes una cuenta? Regístrate
+                    </Link>
                 </div>
-                {errors.password && (
-                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                )}
+
             </div>
-
-            {errors.root && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600">{errors.root.message}</p>
-                </div>
-            )}
-
-            <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-                {isLoading ? (
-                    <>
-                        <span className="animate-spin">⏳</span>
-                        Iniciando sesión...
-                    </>
-                ) : (
-                    "Iniciar Sesión"
-                )}
-            </button>
-
-            <div className="text-center space-y-2">
-                <Link
-                    href="/auth/forgot-password"
-                    className="text-sm text-blue-600 hover:underline"
-                >
-                    ¿Olvidaste tu contraseña?
-                </Link>
-                <Link
-                    href="/auth/register"
-                    className="text-sm text-gray-700 hover:underline"
-                >
-                    ¿No tienes una cuenta? Regístrate
-                </Link>
-            </div>
-        </form>
+        </div>
     );
+
 }
