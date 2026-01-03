@@ -21,11 +21,16 @@ const darccuirLogo = "https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q
 export default async function DarccuirPage() {
     const productsForSection = await prisma.product.findMany({
         where: {
-            rubro: "darccuir"
+            rubro: "darccuir",
+            subrubros: {
+                has: "694ed8aafc32a0d65c466a43", // 👈 id del subrubro
+            },
         },
         orderBy: { createdAt: "desc" },
-        take: 4
+        take: 4,
     });
+
+
 
 
     const subrubros = await getSubrubrosRecursive(null, rubro);

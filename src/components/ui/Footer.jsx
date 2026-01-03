@@ -34,10 +34,10 @@ export default function Footer() {
                             Contacto
                         </h3>
                         <ul className="mt-4 space-y-2 text-sm">
-                            <li>📍 Argentina</li>
-                            <li>📧 contacto@darccuiryatay.com</li>
-                            <li>📱 WhatsApp</li>
-                            <li>🕘 Lun a Vie · 9 a 18 hs</li>
+                            <li>Argentina</li>
+                            <li>contacto@darccuiryatay.com</li>
+                            <li>WhatsApp</li>
+                            <li>Lun a Vie · 9 a 18 hs</li>
                         </ul>
                     </section>
                 </div>

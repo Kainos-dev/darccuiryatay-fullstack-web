@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { domine } from '@/app/ui/fonts';
+import { domine, inter } from '@/app/ui/fonts';
 
 // Componente recursivo para manejar cualquier nivel de jerarquía
 function SubrubroItem({
@@ -157,7 +157,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
     const padres = subrubros.filter(sub => !sub.parentId);
 
     return (
-        <div className={`${domine.className} w-full sticky top-65 z-40`}>
+        <div className={`${inter.className} w-full sticky top-65 z-40`}>
             <div className="max-w-7xl mx-auto flex gap-4 px-4 py-3 items-center" ref={dropdownRef}>
                 {padres.map((padre) => {
                     const tieneHijos = padre.children && padre.children.length > 0;
@@ -248,7 +248,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
                                         params.delete('page');
                                         router.push(`${pathname}?${params.toString()}`, { scroll: false });
                                     }}
-                                    className={`whitespace-nowrap px-4 py-2 text-base font-medium
+                                    className={`whitespace-nowrap px-4 py-2 font-medium
                                             uppercase rounded
                                             ${isParentSelected ? 'bg-brown text-white' : `${styles.container}`}`}
                                 >

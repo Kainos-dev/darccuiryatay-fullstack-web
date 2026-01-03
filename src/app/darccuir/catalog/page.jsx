@@ -3,8 +3,11 @@ import { Suspense } from 'react';
 import { inter, domine } from '@/app/ui/fonts';
 import { getSubrubrosRecursive } from '@/lib/utils/getSubrubrosRecursive';
 import { Rubro } from "@prisma/client";
-import { Search } from 'lucide-react';
+import { ChevronLeft } from "lucide-react";
+import Link from 'next/link';
 
+// COMPONENTS
+import SearchBar from '@/components/ui/SearchBar';
 import InfiniteProductGrid from '@/components/products/InfiniteProductGrid';
 import SubrubrosSection from '@/components/ui/SubrubrosSection';
 
@@ -94,7 +97,15 @@ export default async function DarccuirCatalogo({ searchParams }) {
                 <div className="mb-8 flex items-center justify-between w-full">
 
                     {/* Izquierda: título */}
-                    <div className="flex flex-col">
+                    <div className={`${inter.className} flex flex-col`}>
+                        <Link
+                            href="/darccuir"
+                            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition mb-2"
+                        >
+                            <ChevronLeft size={16} />
+                            Volver al inicio
+                        </Link>
+
                         <h1 className={`${domine.className} text-3xl sm:text-4xl font-bold text-gray-900 mb-2`}>
                             {subrubroActual ? subrubroActual.name : 'Catálogo Darccuir'}
                         </h1>
@@ -107,21 +118,12 @@ export default async function DarccuirCatalogo({ searchParams }) {
 
                     {/* Centro: barra de búsqueda */}
                     <div className="relative flex-1 flex justify-center mr-50">
-                        <div className="relative w-full max-w-md">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Search className="w-5 h-5 text-black" />
-                            </span>
-                            <input
-                                type="text"
-                                aria-label="Buscar productos"
-                                placeholder="Buscar..."
-                                defaultValue={params?.q || ''}
-                                className="w-full pl-11 pr-4 py-2.5 
-                                border-b border-gray-300 
-                                focus:border-black focus:ring-0 
-                                transition-all outline-none text-black"
-                            />
-                        </div>
+                        <SearchBar
+                            mode="catalog"
+                            variant="light"
+                            placeholder="Buscar..."
+                            defaultValue={params?.q || ''}
+                        />
                     </div>
 
                 </div>

@@ -72,6 +72,7 @@ export async function POST(request) {
                 sku: body.sku,
                 name: body.name,
                 price: parseFloat(body.price),
+                priceWholesale: body.priceWholesale ? parseFloat(body.priceWholesale) : null,
                 coverImages: body.coverImages || [],
                 variants: body.variants || [],
                 description: body.description || null,

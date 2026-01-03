@@ -4,3 +4,10 @@
     --color-brown: #8c622a;
     --color-light-brown: #a3794b;
 }
+
+
+html, body {
+  overflow-x: hidden;
+}
+
+

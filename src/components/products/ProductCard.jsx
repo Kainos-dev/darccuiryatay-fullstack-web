@@ -22,11 +22,11 @@ const ProductCard = memo(({ product }) => {
     const hasMultipleCoverImages = product.coverImages?.length >= 2;
     const hasCoverImages = product.coverImages?.length > 0;
 
-    /* const mainImage = hasCoverImages
+    const mainImage = hasCoverImages
         ? product.coverImages[0]
-        : product.variants?.[0]?.images?.[0]; */
+        : product.variants?.[0]?.images?.[0];
 
-    const mainImage = "https://res.cloudinary.com/ddbhwo6fn/image/upload/c_fill,g_auto/f_auto,q_auto/v1760583671/Varios_Motivos_ly45wj.jpg"
+    /* const mainImage = "https://res.cloudinary.com/ddbhwo6fn/image/upload/c_fill,g_auto/f_auto,q_auto/v1760583671/Varios_Motivos_ly45wj.jpg" */
 
     const alternativeImage = hasMultipleCoverImages
         ? product.coverImages[1]
@@ -40,7 +40,7 @@ const ProductCard = memo(({ product }) => {
     );
 
     return (
-        <Link href={`/products/${product.id}`} className="block">
+        <Link href={`/products/${product.id}`} className="block h-full">
             <div
                 className={`${inter.className} cursor-pointer flex flex-col h-full rounded-md shadow-md transition-all hover:shadow-[0_0_10px_rgba(0,0,0,0.25)]`}
                 onMouseEnter={() => setIsHovered(true)}

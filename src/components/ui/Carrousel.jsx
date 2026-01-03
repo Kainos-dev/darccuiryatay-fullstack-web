@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from 'next/image';
-import { inter } from '@/app/ui/fonts';
+import { inter, domine } from '@/app/ui/fonts';
 
 // components :
 import MainNavBar from "./MainNavBar"
@@ -21,7 +22,6 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) =>
                 prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -63,8 +63,7 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
             <div className="absolute inset-0 bg-black/60" />
 
             {/* Overlay inferior */}
-            <div className="absolute bottom-0 left-0 w-full h-12 sm:h-16 md:h-20 lg:h-24 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
-
+            <div className="absolute bottom-0 left-0 w-full h-12 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
 
             <div className="bg-black w-full border h-10 absolute top-0">
                 <AnimatePresence mode="wait">
@@ -80,21 +79,23 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
                     </motion.span>
                 </AnimatePresence>
             </div>
-            <MainNavBar rubro={rubro} logo={yatayLogo} />
 
+            <MainNavBar rubro={rubro} logo={yatayLogo} />
             <SubrubrosSection subrubros={subrubros} variant="light" />
 
-            {/* Contenido */}
-            {/* <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
-                <Image
-                    src={title}
-                    alt="Yatay Title"
-                    width={800}
-                    height={100}
-                    className="mb-6 sm:mb-8 border-4"
-                />
-            </div> */}
+            {/* Contenido en esquina inferior izquierda */}
+            <div className="absolute bottom-8 left-8 z-20 sm:bottom-12 sm:left-12 lg:bottom-28 lg:left-24 flex flex-col items-start gap-4">
+                <h1 className={`${domine.className} text-3xl sm:text-4xl md:text-5xl font-bold text-white text-left`}>
+                    NUESTROS PRODUCTOS
+                </h1>
 
+                <Link
+                    href="/darccuir/catalog"
+                    className={`${inter.className} inline-block px-6 py-2 bg-brown text-sm text-white rounded-md font-semibold tracking-wide hover:bg-light-brown transition-colors shadow-lg`}
+                >
+                    VER CATÁLOGO →
+                </Link>
+            </div>
         </section>
     )
 }

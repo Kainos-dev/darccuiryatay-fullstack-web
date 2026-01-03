@@ -12,6 +12,7 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
         sku: '',
         name: '',
         price: '',
+        priceWholesale: '',
         description: '',
         rubro: 'darccuir',
         stock: 0,
@@ -214,6 +215,19 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
                             required
                             value={formData.price}
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                            className="w-full px-3 py-2 border rounded-lg"
+                            placeholder="0.00"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium mb-2">Precio Mayorista*</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            required
+                            value={formData.priceWholesale}
+                            onChange={(e) => setFormData({ ...formData, priceWholesale: e.target.value })}
                             className="w-full px-3 py-2 border rounded-lg"
                             placeholder="0.00"
                         />

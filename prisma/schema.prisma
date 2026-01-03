@@ -55,7 +55,7 @@ model Cart {
     user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     // NUEVO: Para identificar carritos anónimos
-    sessionId String? 
+    sessionId String?
 
     items CartItem[]
 
@@ -130,6 +130,8 @@ model Product {
     updatedAt DateTime    @updatedAt
     cartItems CartItem[]
 
+    // 🔥 NUEVO: Índice full-text para búsqueda
+    @@index([name, sku, description])
     @@map("products")
 }
 

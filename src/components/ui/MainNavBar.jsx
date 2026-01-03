@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Search, UserRound, ShoppingCart } from "lucide-react";
 import { inter } from "@/app/ui/fonts";
 // components : 
-/* import BtnLogin from "./BtnLogin" */
+import SearchBar from "./SearchBar";
 import UserDropdown from "./UserDropdown";
 import CartIcon from "../cart/CartIcon";
 import CartDrawer from "../cart/CartDrawer";
@@ -30,20 +30,12 @@ export default function MainNavBar({ rubro, logo }) {
 
             {/* Barra de búsqueda */}
             < div className="relative w-full max-w-md mb-4" >
-                <input
-                    type="text"
-                    aria-label="Buscar productos"
-                    placeholder="Buscar..."
-                    className="w-full pl-11 pr-4 py-2.5 
-                    border-b border-gray-300 
-                    focus:border-white focus:ring-0 
-                    transition-all outline-none text-white"
-
+                <SearchBar
+                    mode="home"
+                    redirectTo="/darccuir/catalog"
+                    variant="dark"
+                    placeholder="Buscar productos..."
                 />
-
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Search className="w-5 h-5 text-white" />
-                </span>
             </div >
 
             <div className={`${inter.className} flex items-center gap-3 text-white px-4 h-14`}>

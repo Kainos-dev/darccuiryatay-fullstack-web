@@ -1,10 +1,14 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+import CartIcon from '../cart/CartIcon';
+import CartDrawer from '../cart/CartDrawer';
+
 import AddToCartComponent from '../cart/AddToCartButton';
 
 export default function ProductViewInfo({ product, variants, setCurrentImageIndex }) {
     const router = useRouter();
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const displayCollection = useMemo(() => {
         return product.collection
@@ -51,14 +55,32 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
                     </p>
                 )}
 
-                <div className="mt-10">
-                    <span className="block">
-                        Código SKU: <b>{product.sku || product.id}</b>
-                    </span>
-                    <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-6xl font-bold text-gray-900 mt-2">
-                        {product.name}
-                    </h1>
+                <div className="mt-10 flex items-start justify-between gap-6">
+                    {/* Izquierda: info producto */}
+                    <div className="flex flex-col gap-1">
+                        <span className="text-sm text-gray-500">
+                            Código SKU: <b className="text-gray-700">{product.sku || product.id}</b>
+                        </span>
+
+                        <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                            {product.name}
+                        </h1>
+                    </div>
+
+                    {/* Derecha: acciones */}
+                    <div className="flex items-center gap-3">
+                        <CartIcon
+                            onClick={() => setIsCartOpen(true)}
+                            className="cursor-pointer"
+                        />
+
+                        <CartDrawer
+                            isOpen={isCartOpen}
+                            onClose={() => setIsCartOpen(false)}
+                        />
+                    </div>
                 </div>
+
             </div>
 
             <div className="border-t border-gray-200 pt-4 lg:pt-6">
@@ -84,8 +106,8 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
                                 key={variant.color.hex + index}
                                 onClick={() => handleColorChange(variant)}
                                 className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg border-2 transition ${selectedVariant?.color.hex === variant.color.hex
-                                        ? "border-gray-800 bg-gray-50"
-                                        : "border-gray-300 hover:border-gray-500"
+                                    ? "border-gray-800 bg-gray-50"
+                                    : "border-gray-300 hover:border-gray-500"
                                     }`}
                                 aria-label={`Seleccionar color ${variant.color.name}`}
                             >

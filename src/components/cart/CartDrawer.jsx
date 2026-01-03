@@ -117,7 +117,8 @@ export default function CartDrawer({ rubro, isOpen, onClose }) {
 
                         {/* Botón checkout */}
                         <Link
-                            href={`/cart?from=/${rubro}`}
+                            /* href={`/cart?from=/${rubro}`} */
+                            href={`/cart`}
                             onClick={onClose}
                             className={`block w-full bg-brown text-white text-center py-3 rounded-lg font-semibold hover:brightness-110 transition`}
                         >

@@ -1,20 +1,24 @@
+// components/products/ProductView.jsx
 'use client';
 
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { CldImage } from 'next-cloudinary';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ZoomOverlay from './ZoomOverlay';
 import ProductViewInfo from './ProductViewInfo';
-import { CldImage } from 'next-cloudinary';
+import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 
 export default function ProductView({ product }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    // 👇 NUEVO: Estados para zoom
+    // 👇 Estados para zoom (solo en desktop)
     const [isZooming, setIsZooming] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
     const imageContainerRef = useRef(null);
+
+    // 👇 Detectar dispositivo táctil
+    const isTouchDevice = useIsTouchDevice();
 
     // Validación temprana
     if (!product) {
@@ -31,12 +35,10 @@ export default function ProductView({ product }) {
         const variantsWithImages = (product.variants || []).filter(v => v.images?.length > 0);
         const hasVariantImages = variantsWithImages.length > 0;
 
-        // Construir array de todas las imágenes
         const allImages = hasVariantImages
             ? [...coverImages, ...variantsWithImages.flatMap(v => v.images)]
             : coverImages;
 
-        // Crear mapa de índices para cada variant
         const variantImageIndices = new Map();
         if (hasVariantImages) {
             let currentIndex = coverImages.length;
@@ -59,20 +61,28 @@ export default function ProductView({ product }) {
 
     const { allImages, variantImageIndices } = imageData;
 
-    // 👇 NUEVO: Handlers de zoom
+    // 👇 Handlers de zoom (solo activos en desktop)
     const handleZoomMove = useCallback((e) => {
-        if (!imageContainerRef.current) return;
+        if (isTouchDevice || !imageContainerRef.current) return;
 
         const rect = imageContainerRef.current.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
 
         setZoomPosition({ x, y });
-    }, []);
+    }, [isTouchDevice]);
 
-    const handleZoomEnter = () => setIsZooming(true);
-    const handleZoomLeave = () => setIsZooming(false);
+    const handleZoomEnter = () => {
+        if (!isTouchDevice) {
+            setIsZooming(true);
+        }
+    };
 
+    const handleZoomLeave = () => {
+        if (!isTouchDevice) {
+            setIsZooming(false);
+        }
+    };
 
     // Handlers optimizados
     const nextImage = useCallback(() => {
@@ -87,7 +97,6 @@ export default function ProductView({ product }) {
         }
     }, [allImages.length]);
 
-
     // Si no hay imágenes, mostrar mensaje
     if (allImages.length === 0) {
         return (
@@ -97,30 +106,34 @@ export default function ProductView({ product }) {
         );
     }
 
-    // Añadir navegación por teclado
+    // Navegación por teclado (solo desktop)
     useEffect(() => {
+        if (isTouchDevice) return;
+
         const handleKeyPress = (e) => {
             if (e.key === 'ArrowLeft') prevImage();
             if (e.key === 'ArrowRight') nextImage();
         };
+
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [nextImage, prevImage]); // 👈 Añadir dependencias
+    }, [nextImage, prevImage, isTouchDevice]);
 
     return (
         <div className="w-full min-h-screen flex flex-col lg:flex-row bg-white">
-            {/* Carrusel de imágenes - VUELVE A SU TAMAÑO ORIGINAL */}
+            {/* Carrusel de imágenes */}
             <div className="lg:w-1/2 w-full flex flex-col gap-4 p-4 lg:p-8 bg-gray-50">
                 <div
                     onMouseEnter={handleZoomEnter}
                     onMouseLeave={handleZoomLeave}
-                    className="relative flex-1" // 👈 El que controla el hover
+                    className="relative flex-1"
                 >
-                    {/* Imagen principal CON ZOOM */}
+                    {/* Imagen principal */}
                     <div
                         ref={imageContainerRef}
                         onMouseMove={handleZoomMove}
-                        className="relative bg-white rounded-lg overflow-hidden min-h-[450px] lg:min-h-[825px] cursor-crosshair"
+                        className={`relative bg-white rounded-lg overflow-hidden min-h-[450px] lg:min-h-[825px] ${!isTouchDevice ? 'cursor-crosshair' : ''
+                            }`}
                     >
                         <CldImage
                             src={allImages[currentImageIndex]}
@@ -130,15 +143,15 @@ export default function ProductView({ product }) {
                             crop="fill"
                             className="w-full h-full object-contain"
                             gravity="auto"
-                            quality="auto:best"  // Mejor calidad para hero images
+                            quality="auto:best"
                             format="auto"
                             priority={currentImageIndex === 0}
                         />
 
-                        {/* Lupa */}
-                        {isZooming && (
+                        {/* Lupa (solo desktop) */}
+                        {!isTouchDevice && isZooming && (
                             <div
-                                className="absolute w-12 h-12 lg:w-32 lg:h-32 border-2 border-gray-800/50 rounded-md pointer-events-none bg-white/20 backdrop-blur-sm"
+                                className="absolute w-32 h-32 border-2 border-gray-800/50 rounded-md pointer-events-none bg-white/20 backdrop-blur-sm"
                                 style={{
                                     left: `${zoomPosition.x}%`,
                                     top: `${zoomPosition.y}%`,
@@ -147,7 +160,7 @@ export default function ProductView({ product }) {
                             />
                         )}
 
-                        {/* Prefetch */}
+                        {/* Prefetch siguiente imagen */}
                         {allImages[currentImageIndex + 1] && (
                             <link
                                 rel="prefetch"
@@ -180,7 +193,6 @@ export default function ProductView({ product }) {
                             </>
                         )}
                     </div>
-
                 </div>
 
                 {/* Miniaturas */}
@@ -191,8 +203,8 @@ export default function ProductView({ product }) {
                                 key={idx}
                                 onClick={() => setCurrentImageIndex(idx)}
                                 className={`shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 transition ${currentImageIndex === idx
-                                    ? 'border-gray-800'
-                                    : 'border-gray-300 hover:border-gray-500'
+                                        ? 'border-gray-800'
+                                        : 'border-gray-300 hover:border-gray-500'
                                     }`}
                                 aria-label={`Ver imagen ${idx + 1}`}
                             >
@@ -205,39 +217,27 @@ export default function ProductView({ product }) {
                                     loading="lazy"
                                     sizes="80px"
                                 />
-                                {/* <CldImage
-                                    key={`${idx}-thumb`}
-                                    src={img}
-                                    alt={`Miniatura ${idx + 1}`}
-                                    width={80}
-                                    height={80}
-                                    className="w-full h-full object-contain"
-                                    loading="lazy"
-                                    crop="thumb"  // Thumbnail inteligente
-                                    gravity="auto"
-                                    quality="auto"
-                                    format="auto"
-                                    sizes="80px"
-                                /> */}
                             </button>
                         ))}
                     </div>
                 )}
-
-                {/* 👇 PANEL DE ZOOM FLOTANTE - Aparece SOBRE la info del producto */}
-                <ZoomOverlay
-                    isZooming={isZooming}
-                    zoomPosition={zoomPosition}
-                    src={allImages[currentImageIndex]}
-                />
             </div>
 
             {/* Información del Producto */}
             <ProductViewInfo
                 product={product}
                 variants={variantImageIndices}
-                setCurrentImageIndex={setCurrentImageIndex}         //para cambiar el indice de la imagen cuando se cambie de color (variante)
+                setCurrentImageIndex={setCurrentImageIndex}
             />
+
+            {/* 👇 Panel de Zoom Flotante (solo desktop, sobre ProductViewInfo) */}
+            {!isTouchDevice && (
+                <ZoomOverlay
+                    isZooming={isZooming}
+                    zoomPosition={zoomPosition}
+                    src={allImages[currentImageIndex]}
+                />
+            )}
         </div>
     );
 }

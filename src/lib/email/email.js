@@ -231,7 +231,9 @@ export async function sendOrderConfirmationEmail({
   try {
     // Calcular subtotal
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = 0; // Ajustar según tu lógica
+    const FREE_SHIPPING_MIN = 100000;
+    const shipping = total >= FREE_SHIPPING_MIN ? 0 : 0; // poné acá el costo real si no es gratis
+
 
     const result = await resend.emails.send({
       from: FROM_EMAIL,
@@ -296,7 +298,10 @@ export async function sendOrderConfirmationEmail({
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 8px 0;">
                   <span style="color: #6b7280;">Envío:</span>
-                  <span style="color: #1f2937;">${shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`}</span>
+                  <span style="color: #1f2937;">
+                    ${total >= FREE_SHIPPING_MIN ? 'Gratis' : `$${shipping.toFixed(2)}`}
+                  </span>
+
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 12px 0; border-top: 2px solid #e5e7eb; margin-top: 10px;">
                   <span style="font-size: 18px; font-weight: bold; color: #1f2937;">Total:</span>

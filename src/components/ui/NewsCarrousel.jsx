@@ -63,8 +63,11 @@ export default function NewsCarrousel({ productos }) {
     };
 
     return (
-        <div className="relative w-full mt-50 group">
-            <h2 className={`${barlow.className} text-gray-800 mb-4 ml-8 text-6xl font-medium`}>CARRITO DE NOVEDADES</h2>
+        <div className="relative w-full mt-50 group overflow-hidden">
+            <h2 className={`${barlow.className} text-gray-800 mb-4 ml-8 text-6xl font-medium`}>
+                CARRITO DE NOVEDADES
+            </h2>
+
             {/* Botón izquierdo */}
             <button
                 onClick={() => scroll('left')}
@@ -118,8 +121,8 @@ export default function NewsCarrousel({ productos }) {
                         <div
                             key={i}
                             className={`h-2 rounded-full transition-all duration-300 ${i === 0 && canScrollLeft === false
-                                ? 'w-8 bg-gray-800'
-                                : 'w-2 bg-gray-300'
+                                    ? 'w-8 bg-gray-800'
+                                    : 'w-2 bg-gray-300'
                                 }`}
                         />
                     ))}
@@ -128,4 +131,3 @@ export default function NewsCarrousel({ productos }) {
         </div>
     );
 }
-

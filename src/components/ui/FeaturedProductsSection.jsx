@@ -3,6 +3,8 @@
 import Image from "next/image";
 import ProductCard from "@/components/products/ProductCard";
 import { motion } from "framer-motion";
+import { inter } from "@/app/ui/fonts";
+import Link from "next/link";
 // ============================================
 // OPCIÓN 1: SCROLL INTERNO CON FADE ANIMATIONS (RECOMENDADA)
 // ============================================
@@ -78,13 +80,15 @@ export default function FeaturedProductsSection({ products, heroImage }) {
                         transition={{ duration: 0.5, delay: 0.4 }}
                         className="flex justify-center mt-6 pt-4 border-t border-gray-200"
                     >
-                        <motion.a
-                            href="/darccuir/catalog"
-                            whileTap={{ scale: 0.95 }}
-                            className="px-24 py-2 bg-brown text-white rounded-md font-semibold tracking-wide hover:bg-light-brown transition-colors"
+                        <Link
+                            href={{
+                                pathname: "/darccuir/catalog",
+                                query: { subrubro: "mates" },
+                            }}
+                            className={`${inter.className} inline-block px-6 py-2 bg-brown text-white rounded-md font-semibold tracking-wide hover:bg-light-brown transition-colors shadow-lg`}
                         >
-                            VER CATÁLOGO →
-                        </motion.a>
+                            VER MATES →
+                        </Link>
                     </motion.div>
                 </motion.div>
             </div>

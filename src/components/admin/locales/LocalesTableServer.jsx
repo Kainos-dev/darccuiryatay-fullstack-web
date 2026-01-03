@@ -1,6 +1,6 @@
 // components/admin/locales/LocalesTableServer.jsx
 import Link from "next/link";
-import EliminarLocalBtn from "../EliminarLocalBtn"; // client component
+import EliminarLocalBtn from "./EliminarLocalBtn"; // client component
 
 export default function LocalesTableServer({ locales = [] }) {
     return (
