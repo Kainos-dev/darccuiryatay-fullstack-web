@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { barlow } from '@/app/ui/fonts';
+import { barlow, playFair } from '@/app/ui/fonts';
 import ProductCard from '../products/ProductCard';
 
 export default function NewsCarrousel({ productos }) {
@@ -64,7 +64,7 @@ export default function NewsCarrousel({ productos }) {
 
     return (
         <div className="relative w-full mt-50 group overflow-hidden">
-            <h2 className={`${barlow.className} text-gray-800 mb-4 ml-8 text-6xl font-medium`}>
+            <h2 className={`${playFair.className} text-gray-800 mb-4 ml-8 text-6xl font-semibold`}>
                 CARRITO DE NOVEDADES
             </h2>
 

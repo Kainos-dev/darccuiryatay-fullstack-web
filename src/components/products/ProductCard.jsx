@@ -3,7 +3,7 @@
 import { useState, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { barlow, inter } from '@/app/ui/fonts';
+import { inter } from '@/app/ui/fonts';
 import { CldImage } from 'next-cloudinary';
 
 const formatPrice = (price) => {
@@ -98,7 +98,7 @@ const ProductCard = memo(({ product }) => {
 
                 {/* Info del producto */}
                 <div className="p-4 sm:p-6 lg:p-8  relative flex-1 flex flex-col justify-between bg-white rounded-b-sm">
-                    <h2 className={`${barlow.className} text-lg sm:text-xl lg:text-3xl font-semibold line-clamp-2`}>
+                    <h2 className={`text-lg sm:text-xl lg:text-2xl font-semibold line-clamp-2 uppercase`}>
                         {product.name}
                     </h2>
 

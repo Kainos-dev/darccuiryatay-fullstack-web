@@ -1,4 +1,4 @@
-import { Barlow_Condensed, Inter, Habibi, Domine } from "next/font/google";
+import { Barlow_Condensed, Inter, Habibi, Domine, Playfair_Display } from "next/font/google";
 
 export const barlow = Barlow_Condensed({
     subsets: ["latin"],
@@ -10,6 +10,12 @@ export const inter = Inter({
     subsets: ["latin"],
     weight: ["400", "500", "600", "700"],
     variable: "--font-inter",
+})
+
+export const playFair = Playfair_Display({
+    subsets: ["latin"],
+    weight: ["400", "700", "900"],
+    variable: "--font-playfair",
 })
 
 export const habibi = Habibi({

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "@/lib/validations/auth";
 import { toast } from "sonner";
 
-import { inter, domine } from "@/app/ui/fonts";
+import { inter } from "@/app/ui/fonts";
 
 export default function LoginForm() {
     const {
@@ -128,7 +128,7 @@ export default function LoginForm() {
             <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 sm:p-10 space-y-6 border border-gray-200">
 
                 <div className="text-center space-y-2">
-                    <h2 className={`${domine.className} text-3xl font-bold text-gray-800`}>Iniciar Sesión</h2>
+                    <h2 className={`text-3xl font-bold text-gray-800`}>Iniciar Sesión</h2>
                     <p className="text-gray-500 text-sm">Accede a tu cuenta para continuar</p>
                 </div>
 

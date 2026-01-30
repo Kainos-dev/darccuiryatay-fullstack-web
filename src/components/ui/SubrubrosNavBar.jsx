@@ -114,7 +114,7 @@ function SubrubroItem({
     );
 }
 
-export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
+export default function SubrubrosNavBar({ subrubros, variant = "dark", margin = "ml-0" }) {
     const [openDropdown, setOpenDropdown] = useState(null);
     const dropdownRef = useRef(null);
     const router = useRouter();
@@ -158,7 +158,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
 
     return (
         <div className={`${inter.className} w-full sticky top-42 z-40`}>
-            <div className="max-w-7xl mx-auto flex gap-4 px-4 py-3 items-center" ref={dropdownRef}>
+            <div className={`${margin} flex gap-4 py-3 items-center`} ref={dropdownRef}>
                 {padres.map((padre) => {
                     const tieneHijos = padre.children && padre.children.length > 0;
                     const isParentSelected = selectedSubrubro === padre.id;
@@ -168,7 +168,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
                             {tieneHijos ? (
                                 // Padre con dropdown - dividir acciones
                                 <>
-                                    <div className={`flex items-center gap-1 px-4 py-2 rounded
+                                    <div className={`flex items-center gap-1 py-2 rounded
                                         ${isParentSelected ? 'bg-brown text-white' : `${styles.container}`}`}>
 
                                         {/* Botón para filtrar por el padre */}
@@ -248,7 +248,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
                                         params.delete('page');
                                         router.push(`${pathname}?${params.toString()}`, { scroll: false });
                                     }}
-                                    className={`whitespace-nowrap px-4 py-2 font-medium
+                                    className={`whitespace-nowrap py-2 font-medium
                                             uppercase rounded
                                             ${isParentSelected ? 'bg-brown text-white' : `${styles.container}`}`}
                                 >

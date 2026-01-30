@@ -69,7 +69,7 @@ export default function Carrousel({
             <div className="absolute inset-0 bg-black/60" />
 
             {/* Overlay inferior */}
-            <div className="absolute bottom-0 left-0 w-full h-10 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
+            {/* <div className="absolute bottom-0 left-0 w-full h-10 bg-linear-to-t from-white to-transparent pointer-events-none"></div> */}
 
             <div className="bg-black w-full border h-10 absolute top-0">
                 <AnimatePresence mode="wait">
@@ -90,7 +90,7 @@ export default function Carrousel({
                 rubro={rubro}
                 logo={yatayLogo}
             />
-            <SubrubrosSection subrubros={subrubros} variant="light" />
+            <SubrubrosSection subrubros={subrubros} variant="light" margin="ml-24" />
 
             {/* Contenido en esquina inferior izquierda */}
             <div className="absolute bottom-8 left-8 z-20 sm:bottom-12 sm:left-12 lg:bottom-28 lg:left-24 flex flex-col items-start gap-4">
